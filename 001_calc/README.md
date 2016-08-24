@@ -99,10 +99,13 @@ TCP server <—> program
 ----------------------
 
 Let's connect our calculator to a TCP port, accepting one single connection.
-We'll also add two `-d` options to have socat report some of its own activity.
-You'll nee two shells (easiest way: two terminal windows) for this example.
-We'll call one of them "server" and the other one "client".
+I'll use port 4321 but you can pick your own just as well.
 
+We'll also add two `-d` options to have socat report some of its own activity.
+
+You'll nee two shells for this example.
+The easiest way is to open two terminal windows.
+We'll call one of them "server" and the other one "client".
 
 ```
 # @ server:
