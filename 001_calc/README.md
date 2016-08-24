@@ -14,7 +14,7 @@ program directly of course. It will become more interesting when
 we change one side of the connection – soon.
 
 Lines that start with `$` are shell commands.
-A leading `#` at marks explanations or suggested interaction.
+A leading `#` marks explanations or suggested interaction.
 
 ```
 $ socat STDIO EXEC:./slow_calc.py
@@ -39,39 +39,59 @@ bad formula
 program <—> program
 -------------------
 
-First have a look at what our math quiz will send to its stdout.
+First take the math quiz yourself to see what it does.
+It won't judge your answers anyway. ;-)
 ```
 $ ./slow_math_quiz.py
-[slow_math_quiz    0.000013] start
-[slow_math_quiz    2.000833] asking: 1+1
+[slow_math_quiz    0.000013] quiz start
+[slow_math_quiz    0.000072] ready for a math question?
+# And about 2 seconds later:
+[slow_math_quiz    2.002197] asking: 1+1
 1+1
-[slow_math_quiz    4.002997] asking: 6*7
+# Now type an answer. You've probably guessed this one already:
+2
+[slow_math_quiz    3.552008] got reply: '2\n'
+[slow_math_quiz    3.552073] ready for a math question?
+[slow_math_quiz    5.553415] asking: 6*7
 6*7
-[slow_math_quiz    6.005180] asking: 42-23
+# Halfway done! In order to not spoil your riddle fun, I'll just type…
+foo
+[slow_math_quiz    7.391817] got reply: 'foo\n'
+[slow_math_quiz    7.391905] ready for a math question?
+[slow_math_quiz    9.393975] asking: 42-23
 42-23
-[slow_math_quiz    8.007338] end
+# Once again, not spoiling:
+bar
+[slow_math_quiz   10.624081] got reply: 'bar\n'
+[slow_math_quiz   10.624145] quiz end
 ```
 
-Let's connect that to our calculator!
+Now let's cheat big and connect our calculator to it!
 
 ```
 $ socat EXEC:./slow_math_quiz.py EXEC:./slow_calc.py
-[slow_calc    0.000014] start
-[slow_math_quiz    0.000013] start
-[slow_math_quiz    2.002117] asking: 1+1
-[slow_calc    2.002471] received formula: '1+1'
-[slow_calc    2.002521] pretending to calculate, please stand by!
-[slow_calc    2.503147] sending result: '2'
-[slow_math_quiz    4.004337] asking: 6*7
-[slow_calc    4.004650] received formula: '6*7'
-[slow_calc    4.004708] pretending to calculate, please stand by!
-[slow_calc    4.505415] sending result: '42'
-[slow_math_quiz    6.006522] asking: 42-23
-[slow_calc    6.006791] received formula: '42-23'
-[slow_calc    6.006837] pretending to calculate, please stand by!
-[slow_calc    6.507523] sending result: '19'
-[slow_math_quiz    8.008703] end
-[slow_calc    8.012468] end
+[slow_math_quiz    0.000014] quiz start
+[slow_math_quiz    0.000078] ready for a math question?
+[slow_calc    0.000015] listening on stdin.
+[slow_math_quiz    2.002195] asking: 1+1
+[slow_calc    2.002435] received formula: '1+1'
+[slow_calc    2.002479] pretending to calculate, please stand by!
+[slow_calc    2.503191] sending result: '2'
+[slow_math_quiz    2.503448] got reply: '2\n'
+[slow_math_quiz    2.503523] ready for a math question?
+[slow_math_quiz    4.505598] asking: 6*7
+[slow_calc    4.505737] received formula: '6*7'
+[slow_calc    4.505789] pretending to calculate, please stand by!
+[slow_calc    5.006493] sending result: '42'
+[slow_math_quiz    5.006713] got reply: '42\n'
+[slow_math_quiz    5.006754] ready for a math question?
+[slow_math_quiz    7.008857] asking: 42-23
+[slow_calc    7.009029] received formula: '42-23'
+[slow_calc    7.009085] pretending to calculate, please stand by!
+[slow_calc    7.509797] sending result: '19'
+[slow_math_quiz    7.510024] got reply: '19\n'
+[slow_math_quiz    7.510082] quiz end
+[slow_calc    7.514706] got EOF on stdin.
 ```
 
 
@@ -130,6 +150,8 @@ Exercises
 ---------
   * Modify the TCP example: In the client terminal,
     connect the math quiz program instead of STDIO.
+
+  * Answer the math quiz over TCP.
 
   * Try swapping the connection ends in the socat commands.
     (In the first example, that would put the program first and STDIO last.)

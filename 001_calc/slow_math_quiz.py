@@ -12,11 +12,13 @@ formulae = [
     '42-23',
     ]
 
-log_ts('start')
-sleep(2)
+log_ts('quiz start')
 for formula in formulae:
+    log_ts('ready for a math question?')
+    sleep(2)
     log_ts('asking:', formula)
     stdout.write(formula + '\n')
     stdout.flush()
-    sleep(2)
-log_ts('end')
+    reply = stdin.readline()
+    log_ts('got reply:', repr(reply))
+log_ts('quiz end')
